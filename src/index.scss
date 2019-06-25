@@ -1,0 +1,63 @@
+// Import the framework
+@import 'node_modules/vanilla-framework/scss/vanilla';
+
+// Include all of Vanilla Framework
+@include vanilla;
+
+body, html {
+    height: 100%;
+}
+
+/* The App Background image */
+#app {
+  /* Use "linear-gradient" to add a darken background effect to the image (photographer.jpg). This will make the text easier to read */
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("images/default_bg.png");
+
+  /* Set a specific height */
+  height: 100vh;
+
+  /* Position and center the image to scale nicely on all screens */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+}
+
+.logo {
+    text-align: center;
+    &:hover, &:active, &:focus {
+        text-decoration: none;
+    }
+}
+
+#left-panel {
+
+    &.dark {
+        background-color: rgba(0,0,0,.5);
+    }
+
+    &.light {
+        background-color: rgba(255,255,255,.5);
+    }
+    
+    width: 15rem;
+    height: 100vh;
+    padding: 1em;
+
+
+    .main-logo-container {
+        text-align: center;
+    }
+}
+
+
+#loading {
+    color: red;
+}
+
+.frames {
+    height: 100vh;
+    &#left-frame {
+        border-right: 1px solid #cccccc;
+    }
+}
