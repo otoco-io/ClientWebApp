@@ -1,4 +1,5 @@
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 var config = {
     entry: './src/index.js',
@@ -35,6 +36,11 @@ var config = {
             }
         ]
     },
+    plugins: [
+        new HtmlWebpackPlugin({
+            template: 'src/html_templates/index.html'
+        }),
+    ],
     devServer: {
       contentBase: './dist'
     }
