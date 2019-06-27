@@ -1,17 +1,14 @@
-// Import the framework
-@import 'node_modules/vanilla-framework/scss/vanilla';
-
-// Include all of Vanilla Framework
-@include vanilla;
+$defaultTextColor: #ffffff;
 
 body, html {
     height: 100%;
+    margin: 0px;
 }
 
 /* The App Background image */
 #app {
   /* Use "linear-gradient" to add a darken background effect to the image (photographer.jpg). This will make the text easier to read */
-  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("images/default_bg.png");
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("../images/default_bg.png");
 
   /* Set a specific height */
   height: 100vh;
@@ -37,11 +34,11 @@ body, html {
     }
 
     &.light {
-        background-color: rgba(255,255,255,.5);
+        background-color: rgba(255,255,255,.4);
     }
     
-    width: 15rem;
-    height: 100vh;
+    width: 20rem;
+    height: 100%;
     padding: 1em;
 
 
@@ -59,5 +56,33 @@ body, html {
     height: 100vh;
     &#left-frame {
         border-right: 1px solid #cccccc;
+    }
+}
+
+// Welcome Panel
+#welcome-pnl {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: rgba(0,0,0,1);
+    padding: 25px;
+    .container {
+        color: $defaultTextColor;
+        text-align: center;
+        padding: 55px;
+    }
+    
+}
+
+button.animated-metamask {
+    .hidden.content {
+        top: 9px !important;
+        text-align: center;
+        img {
+            width: 32px;
+            margin: 0 auto;
+        }
     }
 }
