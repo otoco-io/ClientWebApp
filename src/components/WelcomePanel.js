@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 //Components
 import Logo from './Logo'
 
-import { Container, Button, Image, Loader } from 'semantic-ui-react'
+import { Container, Button, Image, Loader, Icon } from 'semantic-ui-react'
 
 import img_metamask from '../images/metamask.svg'
 
@@ -22,22 +22,39 @@ export default () => {
 
 
     const clickHandler_Metamask = (e) => {
+        e.target.style= {
+            display: 'none'
+        }
         setState({loading: true});
         getAccounts_MetaMask().then((accounts) => {
             setState({loading: false, accounts, currentAccount: accounts[0]});
+        }).catch(() => {
+            setState({loading: false});
         });
     }
 
     const ActionBoard = () => {
         if(state.currentAccount) {
-            return <p>Current ETH Account: {state.currentAccount}</p>;
+            return (
+                <>
+                <p>Current ETH Account: {state.currentAccount}</p>
+                <Button className="primary" animated='fade'>
+                    <Button.Content visible>Create new organization</Button.Content>
+                    <Button.Content hidden>
+                        <Icon name="plus" />
+                    </Button.Content>
+                </Button>
+                </>
+            );
         } else {
-            return (<Button className="animated-metamask primary" animated='fade' onClick={clickHandler_Metamask}>
-                <Button.Content visible>MetaMask</Button.Content>
-                <Button.Content hidden>
-                    <Image src={img_metamask} />
-                </Button.Content>
-            </Button>);
+            return (
+                <Button style={{ display: (state.loading) ? 'none' : 'inline-block' }} className="animated-metamask primary" animated='fade' onClick={(e) => {clickHandler_Metamask(e)}}>
+                    <Button.Content visible>MetaMask</Button.Content>
+                    <Button.Content hidden>
+                        <Image src={img_metamask} />
+                    </Button.Content>
+                </Button>
+            );
         }
     }
     
