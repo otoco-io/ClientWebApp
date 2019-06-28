@@ -8,10 +8,29 @@ var config = {
         path: path.resolve(__dirname,'dist')
     },
     resolve: {
-        extensions: ['*', '.js', '.jsx']
+        extensions: ['*', '.js', '.jsx'],
+        alias: {
+            "../../theme.config$": path.join(__dirname, "/semantic-ui/theme.config"),
+            "../semantic-ui/site": path.join(__dirname, "/semantic-ui/site"),
+            "../../semantic-ui/themes/themes": path.join(__dirname, "/semantic-ui/themes")
+        }
     },
     module: {
         rules: [
+            {
+                test: /\.less$/,
+                use: [
+                    {
+                        loader: "style-loader"
+                    },
+                    {
+                        loader: "css-loader"
+                    },
+                    {
+                        loader: "less-loader"
+                    }
+                ]
+            },
             {
                 test: /\.(scss|css)$/,
                 use: ['style-loader', 'css-loader', 'sass-loader']

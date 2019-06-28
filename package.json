@@ -1,15 +1,12 @@
 {
   "scripts": {
     "build:prod": "webpack --mode=production",
-    "build:dev:watch": "webpack --mode=development --watch",
-    "build:prod:watch": "webpack --mode=production --watch",
     "start:dev": "webpack-dev-server"
   },
   "dependencies": {
     "jquery": "^3.4.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^0.87.2",
     "web3": "^1.0.0-beta.55"
   },
@@ -22,8 +19,11 @@
     "css-loader": "^3.0.0",
     "file-loader": "^4.0.0",
     "html-webpack-plugin": "^3.2.0",
+    "less": "^3.9.0",
+    "less-loader": "^5.0.0",
     "node-sass": "^4.12.0",
     "sass-loader": "^7.1.0",
+    "semantic-ui-less": "^2.4.1",
     "style-loader": "^0.23.1",
     "url-loader": "^2.0.0",
     "webpack": "^4.35.0",

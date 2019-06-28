@@ -1,0 +1,41 @@
+/*******************************
+     User Global Variables
+*******************************/
+
+/*-------------------
+    Brand Colors
+--------------------*/
+
+@primaryColor: rgba(13, 223, 225, .8);
+
+/*-------------------
+       Fonts
+--------------------*/
+
+@fontName          : 'Lato';
+@fontSmoothing     : antialiased;
+
+@headerFont        : @fontName, SegoeUI, 'Helvetica Neue', Arial, Helvetica, sans-serif;
+@pageFont          : @fontName, SegoeUI, 'Helvetica Neue', Arial, Helvetica, sans-serif;
+
+@googleFontName    : @fontName;
+@importGoogleFonts : false;
+@googleFontSizes   : '400,700,400italic,700italic';
+@googleSubset      : 'latin';
+
+@googleProtocol    : 'https://';
+@googleFontRequest : '@{googleFontName}:@{googleFontSizes}&subset=@{googleSubset}';
+
+
+@bold              : bold;
+@normal            : normal;
+
+/*-------------------
+        Page
+--------------------*/
+
+@pageBackground      : #000000;
+@pageOverflowX       : hidden;
+
+@lineHeight          : 1.4285em;
+@textColor           : rgba(255, 255, 255, 0.8);
