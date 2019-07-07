@@ -1,10 +1,17 @@
+// React
 import React, { useState } from 'react';
 
-//Components
+// Other Libs
+import axios from 'axios';
+
+// Components
 import Logo from './Logo'
+import CheckingNameBoard from './CheckingNameBoard'
 
-import { Container, Button, Image, Loader, Icon } from 'semantic-ui-react'
+// UI Framework
+import { Container, Button, Image, Loader, Icon, Input, Select } from 'semantic-ui-react'
 
+// Static Sources
 import img_metamask from '../images/metamask.svg'
 
 async function getAccounts_MetaMask() {
@@ -57,6 +64,27 @@ export default () => {
             );
         }
     }
+
+    const CheckingBoard = () => {
+        if(state.currentAccount) {
+            return (
+                <>
+                <h2>Awsome Name!! Now, You can create an organization using this name.</h2>
+                <h3><b>{}</b></h3>
+                <Button className="primary" animated='fade'>
+                    <Button.Content visible>Create new organization</Button.Content>
+                    <Button.Content hidden>
+                        <Icon name="plus" />
+                    </Button.Content>
+                </Button>
+                </>
+            );
+        } else {
+            return (
+                <CheckingNameBoard />
+            );
+        }
+    }
     
     return (
         <div id="welcome-pnl">
@@ -68,9 +96,8 @@ export default () => {
                 <div>
                     <h1>Welcome to Otocorp</h1>
                     <p>Start here to spin up your real-world organization on blockchain</p>
-                    <p>Get started by connecting one of the wallets below</p>
-
-                    <ActionBoard />
+                    <p>Get started by checking a company name you want to create.</p>
+                    <CheckingNameBoard />
                 </div>
             </Container>
         </div>

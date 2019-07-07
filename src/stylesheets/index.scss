@@ -84,3 +84,32 @@ button.animated-metamask {
         }
     }
 }
+.ui.dropdown {
+    .menu {
+        > .item {
+            color: #777 !important;
+        }
+    }
+}
+.ui.input {
+    > input {
+        color: #555 !important;
+    }
+} 
+#check_name {
+    
+    &.placeholder {
+        &::-webkit-input-placeholder { /* Edge */
+            color: #999;
+        }
+        
+        &:-ms-input-placeholder { /* Internet Explorer 10-11 */
+            color: #999;
+        }
+        
+        &::placeholder {
+            color: #999;
+        }
+    }
+    
+}
