@@ -5,15 +5,16 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 // UI Framework
-import {Button, Message, Loader, Input, Select } from 'semantic-ui-react'
+import {Button, Message, Loader, Input, Label } from 'semantic-ui-react'
 
-export default () => { 
+export default ({setStepNum}) => { 
 
     const [jurisdictionCode, setJurisdiction_code] = useState("us_de")
-    const [inputValue, setInputValue] = useState("")
+    const [inputValue, setInputValue] = useState("Brown LLC")
     const [loading, setLoading] = useState(false)
     const [canUseName, setCanUseName] = useState(false)
     const [hasResult, setHasResult] = useState(false)
+    
 
     const clickHandler_Search = (e) => {
         // e.target.style.display = "none";
@@ -29,27 +30,38 @@ export default () => {
             .then(function({data}){
                 setHasResult(true)
                 setCanUseName(data.results.total_count == 0);
+                // setLoading(false);
+            }).catch(function(){
+                setHasResult(false)
+                setCanUseName(false);
                 setLoading(false);
             });
+
+        
     }
 
-    const options = [
-        { key: 'Delaware', text: 'Delaware', value: 'us_de' },
-        { key: 'Wyoming', text: 'Wyoming', value: 'us_wy' }
-    ];
+    React.useEffect(() => {
+        if (canUseName) setStepNum(1);
+    }, [canUseName]);
 
+    
     return (
-        <>
-        <Loader active={loading} />
-        <div style= {{display: (!hasResult)? "none" : "block"}}>
-            <Message style= {{maxWidth: "500px", margin: "15px auto", display: (canUseName)? "none" : "block"}} error header='Sorry' content="This name has been uesd." />
-            <Message style= {{maxWidth: "500px", margin: "15px auto", display: (!canUseName)? "none" : "block"}} success header='Congratulations' content="You can create an organization using this name." />
+        <div style={{display: (canUseName)? "none" : "block"}}>
+            <Loader active={loading} />
+            <h1>Welcome to Otocorp</h1>
+            <p>Start here to spin up your real-world organization on blockchain</p>
+            <p>Get started by checking a company name you want to create.</p>
+            <div style= {{display: (!hasResult)? "none" : "block"}}>
+                <Message style= {{maxWidth: "500px", margin: "15px auto", display: (canUseName)? "none" : "block"}} error header='Sorry' content="This name has been uesd." />
+            </div>
+            <Input type='text' labelPosition='right' id="check_name" placeholder='Search...' onChange={(e, {value}) => {setInputValue(value)}} action>
+                <input className="placeholder" />
+                <Label basic>&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;LLC&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;Delaware&nbsp;&nbsp;&nbsp;&nbsp;</Label>
+                <Button id="btn-check-nmae" className="primary" disabled={loading} onClick={clickHandler_Search}>Check</Button>
+            </Input>
         </div>
-        <Input type='text' id="check_name" placeholder='Search...' onChange={(e, {value}) => {setInputValue(value)}} action>
-          <input className="placeholder" />
-          <Select id="jurisdiction_code" onChange={(e, {value}) => {setJurisdiction_code(value)}} compact options={options} defaultValue='us_de' style={{minWidth: "100px", color: "#777777"}} />
-          <Button type='submit' className="primary" disabled={loading} onClick={clickHandler_Search}>Check</Button>
-        </Input>
-        </>
     );
+    
+
+    
 }
