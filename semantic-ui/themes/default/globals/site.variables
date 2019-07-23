@@ -6,7 +6,7 @@
        Fonts
 --------------------*/
 
-@fontName          : 'Lato';
+@fontName          : 'Montserrat';
 @fontSmoothing     : antialiased;
 
 @headerFont        : @fontName, 'Helvetica Neue', Arial, Helvetica, sans-serif;
@@ -52,7 +52,7 @@
 --------------------*/
 
 @primaryColor        : @blue;
-@secondaryColor      : @black;
+@secondaryColor      : @mainColorActive;
 
 @lightPrimaryColor   : @lightBlue;
 @lightSecondaryColor : @lightBlack;
@@ -233,6 +233,7 @@
 @brown            : #A5673F;
 @grey             : #767676;
 @black            : #1B1C1D;
+@mainColorActive  : #0DDFE1;
 
 /*---  Light Colors  ---*/
 @lightRed         : #FF695E;

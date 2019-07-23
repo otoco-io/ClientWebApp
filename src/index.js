@@ -9,7 +9,7 @@ import App from './components/App';
 //import Web3Integrte from './web3-integrate'
 
 // Style Sheets
-import './stylesheets/index.scss'
+import './stylesheets/index.less'
 import 'semantic-ui-less/semantic.less'
 
 

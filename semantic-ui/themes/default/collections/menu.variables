@@ -250,8 +250,8 @@
 
 @secondaryPointingHoverTextColor: @textColor;
 
-@secondaryPointingActiveBorderColor: @black;
-@secondaryPointingActiveTextColor: @selectedTextColor;
+@secondaryPointingActiveBorderColor: @mainColorActive;
+@secondaryPointingActiveTextColor: @mainColorActive;
 @secondaryPointingActiveFontWeight: @bold;
 
 @secondaryPointingActiveDropdownBorderColor: transparent;

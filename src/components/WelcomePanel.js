@@ -6,10 +6,13 @@ import axios from 'axios';
 
 // Components
 import Logo from './Logo'
-import CheckingNameBoard from './CheckingNameBoard'
+import Step_ActivateCompany from './OtoCorp/SpinUpCompanySteps/ActivateCompany'
+import Step_ConnectWallet from './OtoCorp/SpinUpCompanySteps/ConnectWallet'
+import Step_CheckName from './OtoCorp/SpinUpCompanySteps/CheckName'
+import Step_Nav from './OtoCorp/SpinUpCompanySteps/Nav'
 
 // UI Framework
-import { Container, Button, Image, Loader, Icon, Message, Select } from 'semantic-ui-react'
+import { Container, Button, Image, Loader, Icon, Message, Grid } from 'semantic-ui-react'
 
 // Static Sources
 import img_metamask from '../images/metamask.svg'
@@ -28,7 +31,7 @@ export default () => {
     })
     const [stepNum, setStepNum] = useState(0)
     const [accountBalance, setAccountBalance] = useState('Loading...')
-    const [mainContractAddr, setMainContractAddr] = useState('0x66526b32bd2d111a23b9a04a1045bf3c3d7db557')
+    const [mainContractAddr, setMainContractAddr] = useState('0xfea4ee9eb7791d915884891aa8682adfa56f6787')
     const [mainContractABI, setMainContractABI] = useState([
         {
             "constant": false,
@@ -155,112 +158,72 @@ export default () => {
     const [inputName, setInputName] = useState("")
     const [txID, setTxID] = useState("")
     const [seriesContractAddr, setSeriesContractAddr] = useState("")
+    const [loading, setLoading] = useState(false)
     
     let mainContract = web3.eth.contract(mainContractABI).at(mainContractAddr)
 
-    const clickHandler_Metamask = (e) => {
-        e.target.style= {
-            display: 'none'
-        }
-        setState({loading: true});
-        getAccounts_MetaMask().then((accounts) => {
-            setState({loading: false, accounts, currentAccount: accounts[0]});
+    const ConfirmationView = () => (
+        <div>
+            <div style={{textAlign: "left", marginBottom: "100px"}}>
+                <h1 className="title">Confirmation</h1>
+                <p className="subtitle">Your company <b>XXX LLC</b> was validly formed! You can find proof of its existence here:</p>
+                <p className="subtitle">[ether scan link]</p>
+            </div>
+            <h2></h2>
             
-            web3.eth.getBalance(accounts[0], function(error, result){
-                setAccountBalance(result.toNumber() / 10**18);
-            });
-            
-        }).catch(console.log);
-    }
+        </div>
+    )
 
-    const handleCreateOrg = (e) => {
-        setState({loading: true, currentAccount: state.accounts[0]});
-        mainContract.createSeries(inputName, "BWN", 1000000, {value: web3.toWei("0.1", "ether")}, function(error, result){
-            if(error) console.log(error);
-            setState({loading: false, currentAccount: state.accounts[0]});
-            setTxID(result);
-            setSeriesContractAddr("Waiting for Contract Created....")
-            function polling() {
-                setTimeout(function(){
-                    web3.eth.getTransactionReceipt(result, function(error, result){
-                        console.log("tx_info", result);
-                        if(!result){
-                            polling();
-                        } else {
-                            mainContract.getMySeries(function(error, result){
-                                console.log(result[result.length-1])
-                                setSeriesContractAddr(result[result.length-1])
-                            })
-                        }
-                    })
-                }, 2000);
-            }
-            polling();
-        });
-    }
-
-    const ConnectWalletBoard = () => {
-        if(state.currentAccount) {
-            return (
-                <>
-                <div>OtoCorp Main Contract Address: <h4>{mainContractAddr}</h4></div>
-                <p>You have connected your account successfully!</p>
-                <div>Current ETH Account: <h4>{state.currentAccount}</h4></div>
-                <br/>
-                <div>Account Balance: <h4>{accountBalance} ETH</h4> </div>
-                <br/>
-                <div style={{ display: (txID == "") ? 'none' : 'block' }}>
-                    <b><span>TxID: {txID}</span></b>
-                </div>
-                <br/>
-                <div style={{ display: (seriesContractAddr == "") ? 'none' : 'block' }}>
-                    <b><span>Series Contract Address: {seriesContractAddr}</span></b>
-                </div>
-                <br/>
-                <Button className="primary" animated='fade' onClick={handleCreateOrg}>
-                    <Button.Content visible>Create new organization</Button.Content>
-                    <Button.Content hidden>
-                        <Icon name="plus" />
-                    </Button.Content>
-                </Button>
-                </>
-            );
-        } else {
-            return (
-                <>
-                <Message style= {{maxWidth: "500px", margin: "15px auto"}} success header='Congrats!' content="You can create an organization using this name." />
-                <h1>First, connect your wallet: </h1>
-                <Button style={{ display: (state.loading) ? 'none' : 'inline-block' }} className="animated-metamask primary" animated='fade' onClick={(e) => {clickHandler_Metamask(e)}}>
-                    <Button.Content visible>MetaMask</Button.Content>
-                    <Button.Content hidden>
-                        <Image src={img_metamask} />
-                    </Button.Content>
-                </Button>
-                </>
-            );
-        }
-    }
-
-    const ActionBoard = () => {
+    const StepBoard = () => {
         switch (stepNum) {
             case 1: 
-                return <ConnectWalletBoard />
+                return <Step_ConnectWallet setStepNum={setStepNum} setAccountBalance={setAccountBalance} />
+            case 2: 
+                return <Step_ActivateCompany setStepNum={setStepNum} accountBalance={accountBalance} mainContract={mainContract} />
             default:
-                return <CheckingNameBoard setStepNum={setStepNum} setInputName={setInputName} />
+                return (
+                    <Step_CheckName 
+                        setStepNum={setStepNum} 
+                        setInputName={setInputName} 
+                        setLoading={setLoading} 
+                        inputName={inputName} 
+                    />
+                ) 
         }
     }
-    
+
     return (
         <div id="welcome-pnl">
             <div className="logo-container">
                 <Logo />
             </div>
             <Container className="pnl-body">
-                <Loader active={state.loading} />
-                <div>
-                    
-                    <ActionBoard />
+                <Loader active={loading} />
+                <div style={{display: (stepNum === "ok" ? "none" : "")}}>
+                    <div style={{textAlign: "left", marginBottom: "100px"}}>
+                        <h1 className="title">Welcome to Otocorp</h1>
+                        <p className="subtitle">Instantly spin up your real-world Delaware LLC here.</p>
+                    </div>
+                    <Grid>
+                        <Grid.Row>
+                            <Grid.Column width={4} style={{textAlign: "right"}}>
+
+                                <Step_Nav stepNum={stepNum} />
+
+                            </Grid.Column>
+                            <Grid.Column width={7} style={{textAlign: "left"}}>
+
+                                <StepBoard /> 
+
+                            </Grid.Column>
+                        </Grid.Row>
+                    </Grid>
                 </div>
+
+                <div style={{display: (stepNum !== "ok" ? "none" : "")}}>
+                    <ConfirmationView seriesContractAddr={seriesContractAddr} />
+                </div>
+                
             </Container>
         </div>
     )

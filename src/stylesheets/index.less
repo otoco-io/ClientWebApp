@@ -1,6 +1,9 @@
+@import '../../semantic-ui/site/globals/site.variables';
+
 body, html {
     height: 100%;
     margin: 0px;
+    letter-spacing: 0.1rem;
 }
 
 /* The App Background image */
@@ -64,7 +67,7 @@ body, html {
     position: fixed;
     top: 0;
     left: 0;
-    background: rgba(0,0,0,1);
+    background: rgba(0,0,0,.3);
     padding: 25px;
     .container {
         position: relative;
@@ -99,6 +102,12 @@ button.animated-metamask {
 #check_name {
     
     &.placeholder {
+
+        background: transparent !important;
+        border: 1px solid #555 !important;
+        border-right: none !important;
+        color: #bbb !important;
+
         &::-webkit-input-placeholder { /* Edge */
             color: #999;
         }
@@ -118,6 +127,36 @@ button.animated-metamask {
     color: #bbb !important;
     font-weight: normal !important;
     border-left: none !important;
-    border-radius: 0; 
+}
+
+.subtitle {
+    font-size: 18px;
+    font-weight: @normal;
+}
+.normal-text {
+    font-size: 12px;
+    font-weight: @normal;
+}
+
+.checkname-input-container {
+
+    margin-bottom: 15px;
+    width: 100%;
+
+    .label {
+        background: transparent !important;
+        border: 1px solid #555 !important;
+        border-left: none !important;
+    }
+}
+
+.align-right {
+    text-align: right;
+}
+
+.otocorp-step-wrap {
+    .otocorp-step-item:not(.active) {
+        border-right-color: rgba(255,255,255,.3) !important;
+    }
 }
 
