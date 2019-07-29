@@ -1,39 +1,56 @@
 // React
 import React from 'react';
 
+// Redux Hook
+import {useMappedState,useDispatch} from 'redux-react-hook';
+
 // Semantic UI for React
-import { Input, Image, Button } from 'semantic-ui-react'
+import { Input, Image, Button } from 'semantic-ui-react';
 
-export default ({setStepNum}) => { 
+// Smart Contract
+import mainContract from '../SmartContracts/MainContract';
 
+export default () => { 
+
+    const dispatch = useDispatch();
+    const {currentAccount, accountBalance} = useMappedState(({accountState}) => accountState)
+    const {availableName} = useMappedState(({welcomePanelState}) => welcomePanelState);
+    
     const clickCancelHandler = (e) => {
-        setStepNum(0);
+        dispatch({ type: "Resume Welcome Board" });
     }
 
     const clickSendHandler = (e) => {
-        setStepNum("ok");
-    }
-
-    const handleCreateOrg = (e) => {
-        setState({loading: true, currentAccount: state.accounts[0]});
-        mainContract.createSeries(inputName, "BWN", 1000000, {value: web3.toWei("0.1", "ether")}, function(error, result){
-            if(error) console.log(error);
+        dispatch({ type: "Open Welcome Board Loading" });
+        mainContract.createSeries(availableName, "BWN", 1000000, {value: web3.toWei("0.1", "ether")}, function(error, result){
+            if(error) alert("Something went wrong! Please Try Again Later!")
             else {
-                setState({loading: false, currentAccount: state.accounts[0]});
-                setTxID(result);
-                setSeriesContractAddr("Waiting for Contract Created....")
+                dispatch({ type: "Close Welcome Board Loading" });
+                dispatch({ type: "Push Tx", txID: result });
+                dispatch({ type: "Welcome Board Go To Step N", N: "ok" });
                 function polling() {
                     setTimeout(function(){
-                        web3.eth.getTransactionReceipt(result, function(error, result){
-                            console.log("tx_info", result);
-                            if(!result){
+                        web3.eth.getTransactionReceipt(result, function(error, tx){
+                            console.log("tx_info", tx);
+                            if(!tx){
                                 polling();
-                            } else {
-                                mainContract.getMySeries(function(error, result){
-                                    console.log(result[result.length-1])
-                                    setSeriesContractAddr(result[result.length-1])
+                            } else { 
+                                web3.eth.getBlockNumber(function(error, blockNum){
+                                    console.log("blockNum", blockNum)
+                                    console.log("confirmed", blockNum - tx.blockNumber)
+                                    if(blockNum - tx.blockNumber < 1){
+                                        polling();
+                                    } else {
+                                        mainContract.getMySeries(function(error, result){
+                                            console.log(result)
+                                            if(result) dispatch({ type: "Set Own Company Contracts", ownSeriesContracts: result });
+                                            if(error) alert("Something went wrong!!!!");
+                                        })
+                                    }
                                 })
+
                             }
+                            
                         })
                     }, 2000);
                 }
@@ -45,8 +62,9 @@ export default ({setStepNum}) => {
 
     return (
         <div>
-            <p className="normal-text">All it takes to activate <b>XXXX LLC</b> is to send <b>XX ETH</b> to OtoCorp from your connected wallet.</p>
-            <p className="normal-text">Send <b>XX ETH</b> of total <b>XX.XXX ETH</b> available</p>
+            <p className="normal-text">All it takes to activate <b>{availableName}</b> is to send <b>0.1 ETH</b> to OtoCorp from your connected wallet.</p>
+            <p className="normal-text">Send <b>0.1 ETH</b> of total <b>{accountBalance} ETH</b> available</p>
+            <p className="normal-text">Form Your Account: {currentAccount}</p>
             <p className="normal-text">To Address: <b>otocorp.eth</b></p>
             <p className="normal-text"><a href="#"><b>Terms of Service</b></a></p>
             <p className="align-right">

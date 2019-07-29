@@ -1,55 +1,75 @@
 // React
-import React, {useState} from 'react';
+import React, {useEffect, createRef} from 'react';
+
+// Redux Hook
+import {useMappedState,useDispatch} from 'redux-react-hook';
 
 // Semantic UI for React
 import { Input, Label, Button, Message } from 'semantic-ui-react'
 
 import axios from 'axios';
 
-export default ({setStepNum, setLoading, setInputName, inputName}) => { 
+export default () => { 
 
-    const [checkResult, setCheckResult] = useState({})
-    const [jurisdictionCode, setJurisdiction_code] = useState("us_de")
-    const [canUseName, setCanUseName] = useState(false)
-    const [hasResult, setHasResult] = useState(false)
-    const [showAPIErr, setShowAPIErr] = useState(false)
-    const [inputVal, setInputVal] = useState("")
+    const dispatch = useDispatch();
+    const {inputCompanyName, focusInputCompanyName, availableName} = useMappedState(({welcomePanelState}) => welcomePanelState);
 
-    
+    const inputRef = createRef();
+
+    useEffect(() => {if(focusInputCompanyName) inputRef.current.focus()}, []);
+
+    const closeLoading = () => {
+        dispatch({type: 'Close Welcome Board Loading'});
+    }
+
+    const handleInputChange = (e) => {
+        dispatch({type: 'Enter Company Name on Welcome Board', value: e.target.value})
+    }
+
+    const validate_input = () => {
+        if(inputCompanyName === "") return false;
+        return true;
+    }
 
     const clickCheckHandler = (e) => {
-        /*// e.target.style.display = "none";
 
-        setLoading(true);
-        // let name_for_checking = document.getElementById("check_name").value;
-        // let jurisdiction_code = document.getElementById("jurisdiction_code").value;
-        console.log("checking.code", encodeURIComponent(jurisdictionCode));
-        console.log("checking.name", encodeURIComponent(inputVal));
+        if(!validate_input()) {
+            dispatch({
+                type: 'Show Error Msg on Welcome Board', 
+                title: "Company name is required!", 
+                msg: "Please enter the company name you want to spin up."
+            });
+            return;
+        }
 
-        
-        axios.get(`https://api.opencorporates.com/v0.4.8/companies/search?q=${encodeURIComponent(inputVal)}&jurisdiction_code=${encodeURIComponent(jurisdictionCode)}`)
+        dispatch({type: 'Unfocus Input-CompanyName on Welcome Board'});
+        dispatch({type: 'Open Welcome Board Loading'});
+        dispatch({type: 'Hide Error Msg on Welcome Board'});
+
+        setTimeout(function(){
+            axios.get(`https://api.opencorporates.com/v0.4.8/companies/search?q=${encodeURIComponent(inputCompanyName + " LLC")}&jurisdiction_code=us_de`)
             .then(function({data}){
-                setHasResult(true)
-                setCheckResult({result: data.results.total_count > 0})
-                setLoading(false);
-            }).catch(function(){
-                setHasResult(false);
-                setShowAPIErr(true);
-                setCanUseName(false);
-                setLoading(false);
-            });*/
 
-        setCheckResult({result: false})
+                if (data.results.total_count === 0) dispatch({type: 'Store Available Company Name'});
+                else dispatch({type: 'Show Error Msg on Welcome Board', title: "Sorry! This name has been uesd.", msg: "Please Enter Another Company Name."});
+                
+                closeLoading();
+                
+            }).catch(function(resp){
+                dispatch({type: 'Show Error Msg on Welcome Board', title: "Sorry, Please try again later.", msg: "Ooooops, Service is busy now."});
+                closeLoading();
+            });
+            
+        }, 2000)
 
-        
     }
 
     const clickNextHandler = (e) => {
-        setStepNum(1);
+        if(availableName) dispatch({ type: "Welcome Board Go To Step N", N: 1 });
     }
 
     const clickBackHandler = (e) => {
-        setCheckResult({})
+        dispatch({ type: "Resume Welcome Board" });
     }
 
     const CheckNameForm = () => (
@@ -60,20 +80,23 @@ export default ({setStepNum, setLoading, setInputName, inputName}) => {
                 labelPosition='right' 
                 id="check_name" 
                 placeholder='Search...' 
+                ref={inputRef}
+                value={inputCompanyName}
+                onChange={handleInputChange}
                 action>
                 <input className="placeholder" />
                 <Label basic>&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;LLC&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;Delaware&nbsp;&nbsp;&nbsp;&nbsp;</Label>
             </Input>
-            <Message negative style={{display: (checkResult.result) ? "" : "none"}}>
+            <Message negative style={{display: "none"}}>
                 <Message.Header>Sorry! This name has been uesd.</Message.Header>
                 <p>Please Enter Another Company Name.</p>
             </Message>
-            <Message negative style={{display: (showAPIErr) ? "" : "none"}}>
+            <Message negative style={{display: "none"}}>
                 <Message.Header>Sorry! Please try again later.</Message.Header>
                 <p>Search API service is busy.</p>
             </Message>
             <p className="normal-text">Enter your company name exactly as you want it registered.</p>
-            <p className="normal-text">Click `Check` to verify if your preferred name is available.</p>
+            <p className="normal-text">Click <b>`Check`</b> to verify if your preferred name is available.</p>
 
             <p className="align-right">
                 <Button id="btn-check-nmae" className="primary" onClick={clickCheckHandler}>Check</Button>
@@ -83,9 +106,9 @@ export default ({setStepNum, setLoading, setInputName, inputName}) => {
 
     const AvailableResult = () => (
         <div>
-            <p className="normal-text">Congrats! <b>{inputName}</b> is available for registration with Delaware State Registry.</p>
-            <p className="normal-text"><b>{inputName}</b>  will have its registered address at: N Orange Street, Wilmington, DE 19801.</p>
-            <p className="normal-text">Click `Next` to proceed or go `Back` to try a different name.</p>
+            <p className="normal-text">Congrats! <b>{availableName}</b> is available for registration with Delaware State Registry.</p>
+            <p className="normal-text"><b>{availableName}</b>  will have its registered address at: <br/> <u>N Orange Street, Wilmington, DE 19801.</u></p>
+            <p className="normal-text">Click `<b>Next</b>` to proceed or go `Back` to try a different name.</p>
             <p className="align-right">
                 <Button id="btn-check-nmae" className="primary" onClick={clickBackHandler}>Back</Button>
                 <Button id="btn-check-nmae" className="primary" onClick={clickNextHandler}>Next</Button>
@@ -94,12 +117,10 @@ export default ({setStepNum, setLoading, setInputName, inputName}) => {
     )
 
     const CheckNamePanel = () => {
-        switch (checkResult.result) {
-            case false: 
-                return <AvailableResult />
-            default:
-                return <CheckNameForm />
-        }
+
+        if(availableName === "") return <CheckNameForm />;
+
+        return <AvailableResult />;
     }
 
     return (

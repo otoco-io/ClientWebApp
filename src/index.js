@@ -2,6 +2,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+// Integrated Redux
+import {StoreContext} from 'redux-react-hook';
+import {store} from './Redux/store';
+
 // Components
 import App from './components/App';
 
@@ -16,7 +20,9 @@ import 'semantic-ui-less/semantic.less'
 // Web3Integrte.init();
 
 ReactDOM.render(
-  <App />,
+  <StoreContext.Provider value={store}>
+      <App />
+  </StoreContext.Provider>,
   document.getElementById('app')
 );
 
