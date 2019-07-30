@@ -62,11 +62,13 @@ export default () => {
 
     return (
         <div>
+            <div style={{minHeight: '200px'}}>
             <p className="normal-text">All it takes to activate <b>{availableName}</b> is to send <b>0.1 ETH</b> to OtoCorp from your connected wallet.</p>
             <p className="normal-text">Send <b>0.1 ETH</b> of total <b>{accountBalance} ETH</b> available</p>
             <p className="normal-text">Form Your Account: {currentAccount}</p>
             <p className="normal-text">To Address: <b>otocorp.eth</b></p>
             <p className="normal-text"><a href="#"><b>Terms of Service</b></a></p>
+            </div>
             <p className="align-right">
                 <Button id="btn-check-nmae" className="primary" onClick={clickCancelHandler}>Cancel</Button>
                 <Button id="btn-check-nmae" className="primary" onClick={clickSendHandler}>Send</Button>

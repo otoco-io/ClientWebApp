@@ -209,10 +209,7 @@ export default () => {
                         <h1 className="title">Welcome to Otocorp</h1>
                         <p className="subtitle">Instantly spin up your real-world Delaware LLC here.</p>
                     </div>
-                    <Message negative style={{display: (errMsg.show) ? "" : "none"}}>
-                        <Message.Header>{errMsg.title}</Message.Header>
-                        <p>{errMsg.content}</p>
-                    </Message>
+                    
                     <Grid>
                         <Grid.Row>
                             <Grid.Column width={4} style={{textAlign: "right"}}>
@@ -220,7 +217,11 @@ export default () => {
                                 <Step_Nav stepNum={currentStep} />
 
                             </Grid.Column>
-                            <Grid.Column width={7} style={{textAlign: "left"}}>
+                            <Grid.Column width={7} style={{textAlign: "left", minHeight: '280px', }}>
+                                <Message negative style={{display: (errMsg.show) ? "" : "none"}}>
+                                    <Message.Header>{errMsg.title}</Message.Header>
+                                    <p>{errMsg.content}</p>
+                                </Message>
                                 
                                 <StepBoard /> 
 

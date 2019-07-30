@@ -74,6 +74,7 @@ export default () => {
 
     const CheckNameForm = () => (
         <div>
+            <div style={{minHeight: '200px'}}>
             <Input 
                 type='text' 
                 className="checkname-input-container" 
@@ -97,7 +98,7 @@ export default () => {
             </Message>
             <p className="normal-text">Enter your company name exactly as you want it registered.</p>
             <p className="normal-text">Click <b>`Check`</b> to verify if your preferred name is available.</p>
-
+            </div>
             <p className="align-right">
                 <Button id="btn-check-nmae" className="primary" onClick={clickCheckHandler}>Check</Button>
             </p>
@@ -106,9 +107,11 @@ export default () => {
 
     const AvailableResult = () => (
         <div>
-            <p className="normal-text">Congrats! <b>{availableName}</b> is available for registration with Delaware State Registry.</p>
-            <p className="normal-text"><b>{availableName}</b>  will have its registered address at: <br/> <u>N Orange Street, Wilmington, DE 19801.</u></p>
-            <p className="normal-text">Click `<b>Next</b>` to proceed or go `Back` to try a different name.</p>
+            <div style={{minHeight: '200px'}}>
+                <p className="normal-text">Congrats! <b>{availableName}</b> is available for registration with Delaware State Registry.</p>
+                <p className="normal-text"><b>{availableName}</b>  will have its registered address at: <br/> <u>N Orange Street, Wilmington, DE 19801.</u></p>
+                <p className="normal-text">Click `<b>Next</b>` to proceed or go `Back` to try a different name.</p>
+            </div>
             <p className="align-right">
                 <Button id="btn-check-nmae" className="primary" onClick={clickBackHandler}>Back</Button>
                 <Button id="btn-check-nmae" className="primary" onClick={clickNextHandler}>Next</Button>
