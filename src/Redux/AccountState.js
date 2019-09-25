@@ -1,6 +1,9 @@
 export const initAccountState = {
     currentAccount: "",
-    accountBalance: 0,
+    accountBalanceETH: 0,
+    accountBalanceERC20: 0,
+    erc20Symbol: "",
+    erc20SpinUpFee: "",
     isLocked: true,
     ownSeriesContracts: []
 }

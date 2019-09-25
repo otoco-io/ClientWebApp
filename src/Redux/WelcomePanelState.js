@@ -1,7 +1,7 @@
 export const initWelcomePanelState = {
     showBoard: true,
     loading: false,
-    currentStep: 0,
+    currentStep: 1, // [temp] Skip Step 1
     inputCompanyName: '',
     availableName: '',
     focusInputCompanyName: false,

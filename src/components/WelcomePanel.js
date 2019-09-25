@@ -10,6 +10,7 @@ import axios from 'axios';
 // Components
 import Logo from './Logo'
 import Step_ActivateCompany from './OtoCorp/SpinUpCompanySteps/ActivateCompany'
+import Step_ApprovePayment from './OtoCorp/SpinUpCompanySteps/ApprovePayment'
 import Step_ConnectWallet from './OtoCorp/SpinUpCompanySteps/ConnectWallet'
 import Step_CheckName from './OtoCorp/SpinUpCompanySteps/CheckName'
 import Step_Nav from './OtoCorp/SpinUpCompanySteps/Nav'
@@ -30,154 +31,27 @@ export default () => {
     const {txs} = useMappedState(({txsState}) => txsState);
     const {ownSeriesContracts} = useMappedState(({accountState}) => accountState);
     
-    // console.log("dispatch", dispatch({type: 'OPEN_LOADING'}))
-    
-    //const [stepNum, setStepNum] = useState(0)
-    //const [accountBalance, setAccountBalance] = useState('Loading...')
-    //const [mainContractAddr, setMainContractAddr] = useState('0xfea4ee9eb7791d915884891aa8682adfa56f6787')
-    /*const [mainContractABI, setMainContractABI] = useState([
-        {
-            "constant": false,
-            "inputs": [
-                {
-                    "name": "seriesName",
-                    "type": "string"
-                },
-                {
-                    "name": "seriesSymbol",
-                    "type": "string"
-                },
-                {
-                    "name": "initTotalShares",
-                    "type": "uint256"
-                }
-            ],
-            "name": "createSeries",
-            "outputs": [],
-            "payable": true,
-            "stateMutability": "payable",
-            "type": "function"
-        },
-        {
-            "constant": false,
-            "inputs": [],
-            "name": "withdraw",
-            "outputs": [],
-            "payable": false,
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "payable": false,
-            "stateMutability": "nonpayable",
-            "type": "constructor"
-        },
-        {
-            "constant": true,
-            "inputs": [],
-            "name": "getBalance",
-            "outputs": [
-                {
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "payable": false,
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "constant": true,
-            "inputs": [],
-            "name": "getMySeries",
-            "outputs": [
-                {
-                    "name": "",
-                    "type": "address[]"
-                }
-            ],
-            "payable": false,
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "constant": true,
-            "inputs": [],
-            "name": "manager",
-            "outputs": [
-                {
-                    "name": "",
-                    "type": "address"
-                }
-            ],
-            "payable": false,
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "constant": true,
-            "inputs": [
-                {
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "name": "series",
-            "outputs": [
-                {
-                    "name": "",
-                    "type": "address"
-                }
-            ],
-            "payable": false,
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "constant": true,
-            "inputs": [
-                {
-                    "name": "",
-                    "type": "address"
-                },
-                {
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "name": "series_of",
-            "outputs": [
-                {
-                    "name": "",
-                    "type": "address"
-                }
-            ],
-            "payable": false,
-            "stateMutability": "view",
-            "type": "function"
-        }
-    ])*/
-    //const [inputName, setInputName] = useState("")
-    //const [txID, setTxID] = useState("")
-    //const [seriesContractAddr, setSeriesContractAddr] = useState("")
-    //const [loading, setLoading] = useState(false)
-    
-    //let mainContract = web3.eth.contract(mainContractABI).at(mainContractAddr)
-
     const ConfirmationView = () => (
         <div>
             <div style={{textAlign: "left", marginBottom: "100px"}}>
                 <h1 className="title">Confirmation</h1>
                 <p className="subtitle">Your company <b>{availableName}</b> was validly formed! You can find proof of its existence here:</p>
-                <p className="subtitle">
-                    <a href={`https://ropsten.etherscan.io/tx/${(txs[0]) ? txs[0].id : ""}`} 
-                        target="_blank">View Transaction on Etherscan
-                    </a>
-                </p>
-                <p className="subtitle">
+                <div className="subtitle">
+                    Transaction ID: <b>{(txs[0]) ? txs[0].id : ""}</b>
+                    <div style={{marginTop: '10px'}}>
+                        (<a href={`https://kovan.etherscan.io/tx/${(txs[0]) ? txs[0].id : ""}`} 
+                            target="_blank">View Transaction on Etherscan
+                        </a>)
+                    </div>
+                </div>
+                <div className="subtitle" style={{marginTop: '20px'}}>
                     Your Company Contract Address: <b>{(ownSeriesContracts.length > 0) ? ownSeriesContracts[ownSeriesContracts.length - 1] : "(Tx Pending... Please wait...)"}</b>
-                </p>
+                    <div style={{marginTop: '10px', display: (ownSeriesContracts.length > 0) ? '' : 'none'}}>
+                        (<a href={`https://kovan.etherscan.io/address/${ownSeriesContracts[ownSeriesContracts.length - 1]}`} 
+                            target="_blank">View Contract on Etherscan
+                        </a>)
+                    </div>
+                </div>
             </div>
             <h2></h2>
             
@@ -189,6 +63,8 @@ export default () => {
             case 1: 
                 return <Step_ConnectWallet />
             case 2: 
+                return <Step_ApprovePayment />
+            case 3: 
                 return <Step_ActivateCompany />
             default:
                 return (

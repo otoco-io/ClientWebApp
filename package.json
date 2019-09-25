@@ -11,7 +11,7 @@
     "redux": "^4.0.4",
     "redux-react-hook": "^3.3.2",
     "semantic-ui-react": "^0.87.2",
-    "web3": "^1.0.0-beta.55"
+    "web3": "^1.2.1"
   },
   "devDependencies": {
     "@babel/core": "^7.4.5",

@@ -8,21 +8,21 @@ import {useMappedState,useDispatch} from 'redux-react-hook';
 import { Input, Image, Button } from 'semantic-ui-react';
 
 // Smart Contract
-import mainContract from '../SmartContracts/MainContract';
+import MainContract from '../SmartContracts/MainContract';
 
 export default () => { 
 
     const dispatch = useDispatch();
-    const {currentAccount, accountBalance} = useMappedState(({accountState}) => accountState)
+    const {currentAccount, erc20Symbol, accountBalanceERC20} = useMappedState(({accountState}) => accountState)
     const {availableName} = useMappedState(({welcomePanelState}) => welcomePanelState);
     
     const clickCancelHandler = (e) => {
         dispatch({ type: "Resume Welcome Board" });
     }
 
-    const clickSendHandler = (e) => {
+    const clickSpinUpHandler = (e) => {
         dispatch({ type: "Open Welcome Board Loading" });
-        mainContract.createSeries(availableName, "BWN", 1000000, {value: web3.toWei("0.1", "ether")}, function(error, result){
+        MainContract.getContract().methods.createSeries(availableName).send({from: currentAccount}, function(error, result){
             if(error) alert("Something went wrong! Please Try Again Later!")
             else {
                 dispatch({ type: "Close Welcome Board Loading" });
@@ -41,9 +41,9 @@ export default () => {
                                     if(blockNum - tx.blockNumber < 1){
                                         polling();
                                     } else {
-                                        mainContract.getMySeries(function(error, result){
-                                            console.log(result)
-                                            if(result) dispatch({ type: "Set Own Company Contracts", ownSeriesContracts: result });
+                                        MainContract.getContract().methods.mySeries().call({from: currentAccount}, function(error, ss){
+                                            console.log(ss)
+                                            if(ss) dispatch({ type: "Set Own Company Contracts", ownSeriesContracts: ss });
                                             if(error) alert("Something went wrong!!!!");
                                         })
                                     }
@@ -63,15 +63,13 @@ export default () => {
     return (
         <div>
             <div style={{minHeight: '200px'}}>
-            <p className="normal-text">All it takes to activate <b>{availableName}</b> is to send <b>0.1 ETH</b> to OtoCorp from your connected wallet.</p>
-            <p className="normal-text">Send <b>0.1 ETH</b> of total <b>{accountBalance} ETH</b> available</p>
-            <p className="normal-text">Form Your Account: {currentAccount}</p>
-            <p className="normal-text">To Address: <b>otocorp.eth</b></p>
+            <p className="normal-text">Now you can spin up your company `<b>{availableName}</b>`.</p>
+            <p className="normal-text">(Current Your {erc20Symbol} Balance: <b>{accountBalanceERC20} {erc20Symbol}</b>)</p>
             <p className="normal-text"><a href="#"><b>Terms of Service</b></a></p>
             </div>
             <p className="align-right">
                 <Button id="btn-check-nmae" className="primary" onClick={clickCancelHandler}>Cancel</Button>
-                <Button id="btn-check-nmae" className="primary" onClick={clickSendHandler}>Send</Button>
+                <Button id="btn-check-nmae" className="primary" onClick={clickSpinUpHandler}>Spin up</Button>
             </p>
         </div>
     );
